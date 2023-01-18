@@ -23,5 +23,22 @@ public class Main {
 
         clientThread1.start();
         clientThread2.start();
+
+        try {
+            Thread.sleep(10000);
+
+            clientThread1.interrupt();
+            clientThread2.interrupt();
+            clientThread1.join();
+            clientThread2.join();
+            
+            Thread.sleep(1000);
+            serverThread.interrupt();
+            serverThread.join();
+
+            System.out.println("Game terminated");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

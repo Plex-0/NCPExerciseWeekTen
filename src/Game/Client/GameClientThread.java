@@ -3,7 +3,7 @@ package Game.Client;
 import Game.PlayerState;
 
 
-public class GameClientThread extends Thread{
+public class GameClientThread extends Thread {
     private final String clientName;
     private final PlayerState playerState;
 
@@ -18,14 +18,25 @@ public class GameClientThread extends Thread{
         MessageReceiverThread messageReceiver = new MessageReceiverThread(clientName);
         messageSender.start();
         messageReceiver.start();
-        try {
-            while (!isInterrupted()) {
+        while (!isInterrupted()) {
+            try {
                 playerState.advanceGame();
                 messageSender.updateMessage(playerState);
                 Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+                interrupt();
             }
-        }catch (InterruptedException e) {
+        }
+        messageSender.interrupt();
+        messageReceiver.interrupt();
+        try {
+            messageSender.join();
+            messageReceiver.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        System.out.println(clientName + " terminated");
     }
 }

@@ -7,6 +7,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.AbstractQueue;
+import java.util.LinkedList;
+import java.util.List;
 
 public class ClientConnectionListenerThread extends Thread{
     public boolean isOpen;
@@ -14,6 +16,8 @@ public class ClientConnectionListenerThread extends Thread{
     private AbstractQueue<PlayerState> connectedPlayers;
     private ServerSocket serverSocket;
     private boolean open = false;
+
+    private List<Thread> messageReceiverList = new LinkedList<>();
 
     public boolean isOpen() {
         return open;
@@ -34,7 +38,17 @@ public class ClientConnectionListenerThread extends Thread{
             while (!isInterrupted()) {
                 Socket socket = serverSocket.accept();
                 connectedClients.add(socket);
-                new ClientMessageReceiverThread(socket, connectedClients, connectedPlayers).start();
+                Thread thread = new ClientMessageReceiverThread(socket, connectedClients, connectedPlayers);
+                messageReceiverList.add(thread);
+                thread.start();
+            }
+            for (Thread thread : messageReceiverList) {
+                thread.interrupt();
+                try {
+                    thread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
