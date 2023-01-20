@@ -22,8 +22,8 @@ public class ClientMessageReceiverThread extends Thread{
     @Override
     public void run() {
         try {
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             while (!isInterrupted()) {
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                 PlayerState receivedState = (PlayerState) inputStream.readObject();
                 connectedPlayers.add(receivedState);
                 for (Socket s : connectedClients) {

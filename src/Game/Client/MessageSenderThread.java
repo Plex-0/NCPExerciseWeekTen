@@ -19,8 +19,8 @@ public class MessageSenderThread extends Thread{
     @Override
     public void run() {
         try(Socket socket = new Socket("127.0.0.1", 50000)) {
+            ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
             while (!isInterrupted()) {
-                ObjectOutputStream outputStream = new ObjectOutputStream(socket.getOutputStream());
                 outputStream.writeObject(message);
                 outputStream.flush();
                 System.out.println(clientName + " sent:\n\t" + message);

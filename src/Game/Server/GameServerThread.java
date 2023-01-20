@@ -7,8 +7,8 @@ import java.util.AbstractQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class GameServerThread extends Thread{
-    private AbstractQueue<Socket> connectedClients = new ConcurrentLinkedQueue<>();
-    private AbstractQueue<PlayerState> connectedPlayers = new ConcurrentLinkedQueue<>();
+    private final AbstractQueue<Socket> connectedClients = new ConcurrentLinkedQueue<>();
+    private final AbstractQueue<PlayerState> connectedPlayers = new ConcurrentLinkedQueue<>();
     private boolean open = false;
     public boolean isOpen(){
         return open;

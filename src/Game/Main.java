@@ -19,9 +19,9 @@ public class Main {
             e.printStackTrace();
         }
         GameClientThread clientThread1 = new GameClientThread("Client 1", "Phyllis");
-        GameClientThread clientThread2 = new GameClientThread("Client 2", "Ophelia");
+        //GameClientThread clientThread2 = new GameClientThread("Client 2", "Ophelia");
 
         clientThread1.start();
-        clientThread2.start();
+        //clientThread2.start();
     }
 }

@@ -16,8 +16,8 @@ public class MessageReceiverThread extends Thread{
     @Override
     public void run() {
         try(Socket socket = new Socket("127.0.0.1", 50000)) {
+            ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
             while (!isInterrupted()) {
-                ObjectInputStream inputStream = new ObjectInputStream(socket.getInputStream());
                 PlayerState message = (PlayerState) inputStream.readObject();
                 System.out.println(clientName + " received : \n\t" + message);
             }
