@@ -24,9 +24,14 @@ public class MessageSenderThread extends Thread{
                 outputStream.writeObject(message);
                 outputStream.flush();
                 System.out.println(clientName + " sent:\n\t" + message);
-                Thread.sleep(1000);
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    //e.printStackTrace();
+                    interrupt();
+                }
             }
-        } catch (IOException | InterruptedException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

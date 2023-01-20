@@ -32,5 +32,13 @@ public class GameServerThread extends Thread{
                 connectedPlayers.remove(state);
             }
         }
+        listener.interrupt();
+        try {
+            listener.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Server terminated");
     }
 }
