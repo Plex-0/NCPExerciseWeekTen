@@ -2,10 +2,14 @@ package Game.Client;
 
 import Game.PlayerState;
 
+import java.io.IOException;
+import java.net.Socket;
+
 
 public class GameClientThread extends Thread {
     private final String clientName;
     private final PlayerState playerState;
+    private Socket serverSocket;
 
     public GameClientThread(String clientName, String playerName) {
         this.clientName = clientName;
@@ -14,8 +18,13 @@ public class GameClientThread extends Thread {
 
     @Override
     public void run() {
-        MessageSenderThread messageSender = new MessageSenderThread(clientName, playerState);
-        MessageReceiverThread messageReceiver = new MessageReceiverThread(clientName);
+        try {
+            serverSocket = new Socket("127.0.0.1", 50000);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        MessageSenderThread messageSender = new MessageSenderThread(clientName, playerState, serverSocket);
+        MessageReceiverThread messageReceiver = new MessageReceiverThread(clientName, serverSocket);
         messageSender.start();
         messageReceiver.start();
         while (!isInterrupted()) {
