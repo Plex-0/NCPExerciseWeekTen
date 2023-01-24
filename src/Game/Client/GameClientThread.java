@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 
+@SuppressWarnings("BusyWait")
 public class GameClientThread extends Thread {
     private final String clientName;
     private final PlayerState playerState;

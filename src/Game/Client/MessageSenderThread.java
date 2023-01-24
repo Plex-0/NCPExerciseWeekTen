@@ -6,12 +6,12 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-@SuppressWarnings("BusyWait")
 public class MessageSenderThread extends Thread{
     private final String clientName;
     private PlayerState message;
+    private boolean stateUpdated = true;
 
-    private Socket clientSocket;
+    private final Socket clientSocket;
 
     public MessageSenderThread(String clientName, PlayerState message, Socket clientSocket) {
         this.clientName = clientName;
@@ -24,14 +24,11 @@ public class MessageSenderThread extends Thread{
         try {
             ObjectOutputStream outputStream = new ObjectOutputStream(clientSocket.getOutputStream());
             while (!isInterrupted()) {
-                outputStream.writeObject(message);
-                outputStream.flush();
-                System.out.println(clientName + " sent:\n\t" + message);
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    //e.printStackTrace();
-                    interrupt();
+                if (stateUpdated) {
+                    outputStream.writeObject(message);
+                    outputStream.flush();
+                    System.out.println(clientName + " sent:\n\t" + message);
+                    stateUpdated = false;
                 }
             }
         } catch (IOException e) {
@@ -40,6 +37,7 @@ public class MessageSenderThread extends Thread{
     }
 
     public synchronized void updateMessage(PlayerState state) {
-        message = state;
+        //message = state;
+        stateUpdated = true;
     }
 }

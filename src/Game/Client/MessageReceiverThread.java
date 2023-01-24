@@ -22,7 +22,7 @@ public class MessageReceiverThread extends Thread {
             ObjectInputStream inputStream = new ObjectInputStream(clientSocket.getInputStream());
             while (!isInterrupted()) {
                 PlayerState message = (PlayerState) inputStream.readObject();
-                System.out.println(clientName + " received : \n\t" + message);
+                System.out.println(clientName + " received: \n\t" + message);
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
